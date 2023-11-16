@@ -1,0 +1,91 @@
+schema item {
+    document item {
+        field item_id type string {
+            indexing: summary | attribute
+        }
+
+        field item_name_en_us type string {
+            indexing: summary | index
+            index: enable-bm25
+        }
+
+        field path type string {
+            indexing: summary | attribute
+        }
+
+        field text_embedding type tensor<float>(x[512]) {
+            indexing: attribute | index
+            attribute {
+                distance-metric: angular
+            }
+            index {
+                hnsw {
+                    max-links-per-node: 16
+                    neighbors-to-explore-at-insert: 50
+                }
+            }
+        }
+
+        field image_embedding type tensor<float>(x[512]) {
+            indexing: attribute | index
+            attribute {
+                distance-metric: angular
+            }
+            index {
+                hnsw {
+                    max-links-per-node: 16
+                    neighbors-to-explore-at-insert: 50
+                }
+            }
+        }
+
+        field synthetic_embedding type tensor<float>(x[512]) {
+            indexing: attribute | index
+            attribute {
+                distance-metric: angular
+            }
+            index {
+                hnsw {
+                    max-links-per-node: 16
+                    neighbors-to-explore-at-insert: 50
+                }
+            }
+        }
+    }
+
+    rank-profile text_embedding_closeness {
+        match-features: distance(field, text_embedding)
+
+        inputs {
+            query(query_embedding) tensor<float>(x[512])
+        }
+
+        first-phase {
+            expression: closeness(field, text_embedding)
+        }
+    }
+
+    rank-profile image_embedding_closeness {
+        match-features: distance(field, image_embedding)
+
+        inputs {
+            query(query_embedding) tensor<float>(x[512])
+        }
+
+        first-phase {
+            expression: closeness(field, image_embedding)
+        }
+    }
+
+    rank-profile synthetic_embedding_closeness {
+        match-features: distance(field, synthetic_embedding)
+
+        inputs {
+            query(query_embedding) tensor<float>(x[512])
+        }
+
+        first-phase {
+            expression: closeness(field, synthetic_embedding)
+        }
+    }
+}
