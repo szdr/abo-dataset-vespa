@@ -13,7 +13,7 @@ schema item {
             indexing: summary | attribute
         }
 
-        field text_embedding type tensor<float>(x[512]) {
+        field text_embedding type tensor<float>(x[768]) {
             indexing: attribute | index
             attribute {
                 distance-metric: angular
@@ -26,7 +26,7 @@ schema item {
             }
         }
 
-        field image_embedding type tensor<float>(x[512]) {
+        field image_embedding type tensor<float>(x[768]) {
             indexing: attribute | index
             attribute {
                 distance-metric: angular
@@ -39,7 +39,7 @@ schema item {
             }
         }
 
-        field synthetic_embedding type tensor<float>(x[512]) {
+        field synthetic_embedding type tensor<float>(x[768]) {
             indexing: attribute | index
             attribute {
                 distance-metric: angular
@@ -57,7 +57,7 @@ schema item {
         match-features: distance(field, text_embedding)
 
         inputs {
-            query(query_embedding) tensor<float>(x[512])
+            query(query_embedding) tensor<float>(x[768])
         }
 
         first-phase {
@@ -69,7 +69,7 @@ schema item {
         match-features: distance(field, image_embedding)
 
         inputs {
-            query(query_embedding) tensor<float>(x[512])
+            query(query_embedding) tensor<float>(x[768])
         }
 
         first-phase {
@@ -81,7 +81,7 @@ schema item {
         match-features: distance(field, synthetic_embedding)
 
         inputs {
-            query(query_embedding) tensor<float>(x[512])
+            query(query_embedding) tensor<float>(x[768])
         }
 
         first-phase {
